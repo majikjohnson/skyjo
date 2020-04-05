@@ -8,8 +8,8 @@ setup(
     },
     packages=find_packages(),
     entry_points = {
-        "console_scripts": [
-            "hello = skyjo.sayhello:main"
+        "gui_scripts": [
+            "skyjo = skyjo.main:gui"
         ]
     }
 )
