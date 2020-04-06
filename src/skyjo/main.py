@@ -1,7 +1,6 @@
-import tkinter as tk
+import pygame
 import itertools
 from random import randrange
-
 
 class SkyjoDeck(object):
     __instance = None
@@ -125,18 +124,7 @@ class GameState(object):
         return True
 
 
-def print_board(player, window):
-    card_index = 0
-    for row_no in range(3):
-        for col_no in range(4):
-            frame = tk.Frame(master=window, relief=tk.RAISED, borderwidth=1)
-            frame.grid(row=row_no, column=col_no, padx=5, pady=5)
-            label = tk.Label(master=frame, text=f'{player.get_card(card_index)}')
-            label.pack()
-            card_index = card_index + 1
-
 def gui():
-    root = tk.Tk()
     deck = SkyjoDeck()
     dealer = Dealer(deck)
     player1 = Player()
@@ -151,17 +139,35 @@ def gui():
     print(player1._hand)
     print(player2._hand)
 
+    pygame.init()
+    screen = pygame.display.set_mode([519, 500])
+    font = pygame.font.SysFont('Arial', 18)
 
-    frame_p1 = tk.Frame(master=root, borderwidth=10)
-    frame_p2 = tk.Frame(master=root, borderwidth=10)
+    card_size = (25, 40)
 
-    print_board(player1, frame_p1)
-    print_board(player2, frame_p2)
+    running = True
 
-    frame_p1.grid(row=0, column=0)
-    frame_p2.grid(row=0, column=1)
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        
+        screen.fill((255, 255, 255))
 
-    root.mainloop()
+        #pygame.draw.circle(screen, (0, 0, 255), (250, 250), 75)
+        counter = 0
+        for y in range(3):
+            for x in range(4):
+                counter += 1
+                rect = pygame.Rect(x * (card_size[0] + 1), y * (card_size[1] + 1), card_size[0], card_size[1])
+                text = font.render(str(counter), True, (0, 255, 255))
+                pygame.draw.rect(screen, (255, 0, 0), rect)
+                screen.blit(text, (x * (card_size[0] + 1) + 6, y * (card_size[1] + 1)))
+
+        pygame.display.flip()
+
+    pygame.quit()
+
 
 if __name__ == "__main__":
     gui() 

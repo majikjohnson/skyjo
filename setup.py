@@ -7,6 +7,9 @@ setup(
         '': 'src'
     },
     packages=find_packages(),
+    install_requires=[
+        'pygame'
+    ],
     entry_points = {
         "gui_scripts": [
             "skyjo = skyjo.main:gui"
