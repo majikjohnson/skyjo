@@ -1,6 +1,7 @@
 import pygame
 import itertools
 from random import randrange
+import os
 
 class SkyjoDeck(object):
     __instance = None
@@ -56,9 +57,7 @@ class Player:
 
     def get_card(self, index):
         ''' Returns the card at the given index '''
-        if self._hand[index][1] is True:
-            return self._hand[index][0]
-        return ' '
+        return self._hand[index][0]
 
     def reveal_card(self, index):
         ''' Sets the card at the given index to visible '''
@@ -72,7 +71,7 @@ class Player:
         deck.discard_card(old_card)
         return self._hand[index][0]
 
-    def is_card_visible(self, index):
+    def card_visible(self, index):
         ''' Returns boolean indicating if the card at the given index is visibile or not '''
         return self._hand[index][1]
 
@@ -124,7 +123,29 @@ class GameState(object):
         return True
 
 
+card_art = {
+    0: 'card_0.png',
+    1: 'card_1.png',
+    2: 'card_2.png',
+    3: 'card_3.png',
+    4: 'card_4.png',
+    5: 'card_5.png',
+    6: 'card_6.png',
+    7: 'card_7.png',
+    8: 'card_8.png',
+    9: 'card_9.png',
+    10: 'card_10.png',
+    11: 'card_11.png',
+    12: 'card_12.png',
+    -1: 'card_-1.png',
+    -2: 'card_-2.png',
+}
+
 def gui():
+
+    current_path = os.path.dirname(__file__) # Where your .py file is located
+    art_path = os.path.join(current_path, 'art') # The image folder path
+
     deck = SkyjoDeck()
     dealer = Dealer(deck)
     player1 = Player()
@@ -133,17 +154,18 @@ def gui():
     dealer.deal_hand([player2])
     player1.reveal_card(1)
     player1.reveal_card(2)
-    player2.reveal_card(5)
-    player2.reveal_card(6)
+    player1.reveal_card(5)
+    player1.reveal_card(6)
 
     print(player1._hand)
     print(player2._hand)
 
-    pygame.init()
-    screen = pygame.display.set_mode([519, 500])
-    font = pygame.font.SysFont('Arial', 18)
+    card_w = 10 * 5
+    card_h = 15 * 5
 
-    card_size = (25, 40)
+    pygame.init()
+
+    screen = pygame.display.set_mode((154 * 5, 84 * 5))
 
     running = True
 
@@ -151,22 +173,36 @@ def gui():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
+        screen.fill((0, 0, 0))
+
+        x = 3
+        y = 3
+
+        p1_card_itr = 0
+
+        for row in range(3):
+            for col in range(4):
+
+                card_art_filename = 'card_back.png'
+                current_card = player1.get_card(p1_card_itr)
+                if player1.card_visible(p1_card_itr):
+                    card_art_filename = card_art[current_card]
+                p1_card_itr += 1
+
+                card_img = pygame.image.load(os.path.join(art_path, card_art_filename))
+                rect_card = card_img.get_rect()
+                rect_card.x = x + (3 * col)
+                rect_card.y = y + (3 * row)
+                screen.blit(card_img, rect_card)
+                x += rect_card.width
+                card_h = rect_card.height
+            y += card_h
+            x = 3
+
         
-        screen.fill((255, 255, 255))
-
-        #pygame.draw.circle(screen, (0, 0, 255), (250, 250), 75)
-        counter = 0
-        for y in range(3):
-            for x in range(4):
-                counter += 1
-                rect = pygame.Rect(x * (card_size[0] + 1), y * (card_size[1] + 1), card_size[0], card_size[1])
-                text = font.render(str(counter), True, (0, 255, 255))
-                pygame.draw.rect(screen, (255, 0, 0), rect)
-                screen.blit(text, (x * (card_size[0] + 1) + 6, y * (card_size[1] + 1)))
-
         pygame.display.flip()
 
-    pygame.quit()
 
 
 if __name__ == "__main__":
