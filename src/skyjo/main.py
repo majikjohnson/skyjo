@@ -2,6 +2,7 @@ import pygame
 import itertools
 from random import randrange
 import os
+from skyjo import constants
 
 class SkyjoDeck(object):
     __instance = None
@@ -152,34 +153,38 @@ def gui():
     player2 = Player()
     dealer.deal_hand([player1])
     dealer.deal_hand([player2])
-    player1.reveal_card(1)
-    player1.reveal_card(2)
-    player1.reveal_card(5)
-    player1.reveal_card(6)
 
     print(player1._hand)
     print(player2._hand)
 
-    card_w = 10 * 5
-    card_h = 15 * 5
-
     pygame.init()
+    clock = pygame.time.Clock()
 
-    screen = pygame.display.set_mode((154 * 5, 84 * 5))
+    screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
 
     running = True
 
+
     while running:
+
+        mouse_clicked = False
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                mouse_clicked = True
 
-        screen.fill((0, 0, 0))
 
-        x = 3
-        y = 3
+        screen.fill(constants.SADDLE_BROWN)
+
+        card_x = constants.HAND_PANEL_PADDING_LEFT
+        card_y = constants.HAND_PANEL_PADDING_TOP
 
         p1_card_itr = 0
+
+        ui_elements = []
 
         for row in range(3):
             for col in range(4):
@@ -191,17 +196,26 @@ def gui():
                 p1_card_itr += 1
 
                 card_img = pygame.image.load(os.path.join(art_path, card_art_filename))
+                card_img = pygame.transform.scale(card_img, (constants.CARD_WIDTH, constants.CARD_HEIGHT))
                 rect_card = card_img.get_rect()
-                rect_card.x = x + (3 * col)
-                rect_card.y = y + (3 * row)
-                screen.blit(card_img, rect_card)
-                x += rect_card.width
-                card_h = rect_card.height
-            y += card_h
-            x = 3
+                rect_card.x = card_x + (constants.CARD_PADDING * col)
+                rect_card.y = card_y + (constants.CARD_PADDING * row)
 
+                ui_elements.append(rect_card)
+
+                screen.blit(card_img, rect_card)
+                card_x += rect_card.width
+                card_h = rect_card.height
+            card_y += card_h
+            card_x = constants.HAND_PANEL_PADDING_LEFT
         
+        if mouse_clicked:
+            for i, card in enumerate(ui_elements):
+                if card.collidepoint(mouse_x, mouse_y):
+                    player1.reveal_card(i)
+
         pygame.display.flip()
+        clock.tick(60)
 
 
 
