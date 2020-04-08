@@ -42,7 +42,7 @@ class SkyjoDeck(object):
         return None
 
     @classmethod
-    def cards_in_draw_pile(cls):
+    def draw_pile_size(cls):
         ''' Return an int representing the number of cards left in the draw pile '''
         return len(cls.__instance._draw_pile)
 
@@ -108,6 +108,7 @@ class GameState(object):
             cls.__instance._current_player = 0
             cls.__instance._game_over = False
             cls.__instance._remaining_turns = deck.draw_pile_size()
+        return cls.__instance
     
     @classmethod
     def end_turn(cls):
@@ -123,51 +124,42 @@ class GameState(object):
             return False
         return True
 
+    @classmethod
+    def get_current_player(cls):
+        ''' Returns the player who's turn it currently is '''
+        return cls.__instance._players[cls.__instance._current_player]
 
-card_art = {
-    0: 'card_0.png',
-    1: 'card_1.png',
-    2: 'card_2.png',
-    3: 'card_3.png',
-    4: 'card_4.png',
-    5: 'card_5.png',
-    6: 'card_6.png',
-    7: 'card_7.png',
-    8: 'card_8.png',
-    9: 'card_9.png',
-    10: 'card_10.png',
-    11: 'card_11.png',
-    12: 'card_12.png',
-    -1: 'card_-1.png',
-    -2: 'card_-2.png',
-}
+    @classmethod
+    def get_players(cls):
+        ''' Returns a list containing all players '''
+        return cls.__instance._players
+
+    @classmethod
+    def current_player_index(cls):
+        ''' Returns an int representing the index of the currently active player '''
+        return cls.__instance._current_player
 
 def gui():
-
     current_path = os.path.dirname(__file__) # Where your .py file is located
     art_path = os.path.join(current_path, 'art') # The image folder path
 
     deck = SkyjoDeck()
     dealer = Dealer(deck)
-    player1 = Player()
-    player2 = Player()
-    dealer.deal_hand([player1])
-    dealer.deal_hand([player2])
-
-    print(player1._hand)
-    print(player2._hand)
+    players = []
+    for i in range(4):
+        players.append(Player())
+    dealer.deal_hand(players)
+    game_state = GameState(players, deck)
 
     pygame.init()
     clock = pygame.time.Clock()
-
     screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
-
     running = True
 
-
     while running:
-
         mouse_clicked = False
+        current_player_index = game_state.current_player_index()
+        current_player = game_state.get_current_player()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -176,48 +168,51 @@ def gui():
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 mouse_clicked = True
 
-
         screen.fill(constants.SADDLE_BROWN)
 
-        card_x = constants.HAND_PANEL_PADDING_LEFT
-        card_y = constants.HAND_PANEL_PADDING_TOP
-
-        p1_card_itr = 0
-
+        hand_panel_spacer = 0
         ui_elements = []
 
-        for row in range(3):
-            for col in range(4):
+        for player in game_state.get_players():
+            card_x = constants.HAND_PANEL_PADDING_LEFT + hand_panel_spacer
+            card_y = constants.HAND_PANEL_PADDING_TOP
+            card_coords = []
 
-                card_art_filename = 'card_back.png'
-                current_card = player1.get_card(p1_card_itr)
-                if player1.card_visible(p1_card_itr):
-                    card_art_filename = card_art[current_card]
-                p1_card_itr += 1
+            card_itr = 0
 
-                card_img = pygame.image.load(os.path.join(art_path, card_art_filename))
-                card_img = pygame.transform.scale(card_img, (constants.CARD_WIDTH, constants.CARD_HEIGHT))
-                rect_card = card_img.get_rect()
-                rect_card.x = card_x + (constants.CARD_PADDING * col)
-                rect_card.y = card_y + (constants.CARD_PADDING * row)
+            for row in range(3):
+                for col in range(4):
+                    constants.CARD_ART_filename = 'card_back.png'
+                    current_card = player.get_card(card_itr)
+                    if player.card_visible(card_itr):
+                        constants.CARD_ART_filename = constants.CARD_ART[current_card]
+                    card_itr += 1
 
-                ui_elements.append(rect_card)
+                    card_img = pygame.image.load(os.path.join(art_path, constants.CARD_ART_filename))
+                    card_img = pygame.transform.scale(card_img, (constants.CARD_WIDTH, constants.CARD_HEIGHT))
+                    rect_card = card_img.get_rect()
+                    rect_card.x = card_x + (constants.CARD_PADDING * col)
+                    rect_card.y = card_y + (constants.CARD_PADDING * row)
 
-                screen.blit(card_img, rect_card)
-                card_x += rect_card.width
-                card_h = rect_card.height
-            card_y += card_h
-            card_x = constants.HAND_PANEL_PADDING_LEFT
+                    card_coords.append(rect_card)
+
+                    screen.blit(card_img, rect_card)
+                    card_x += rect_card.width
+                    card_h = rect_card.height
+                card_y += card_h
+                card_x = constants.HAND_PANEL_PADDING_LEFT + hand_panel_spacer
+            ui_elements.append(card_coords)
+            hand_panel_spacer += constants.HAND_PANEL_WIDTH               
         
         if mouse_clicked:
-            for i, card in enumerate(ui_elements):
+            for i, card in enumerate(ui_elements[current_player_index]):
                 if card.collidepoint(mouse_x, mouse_y):
-                    player1.reveal_card(i)
+                    if not current_player.card_visible(i):
+                        current_player.reveal_card(i)
+                        game_state.end_turn()
 
         pygame.display.flip()
         clock.tick(60)
-
-
 
 if __name__ == "__main__":
     gui() 
