@@ -2,6 +2,7 @@ from random import randrange
 import itertools
 
 class Deck(object):
+    ''' Sigleton class used for managing the card deck '''
     __instance = None
 
     def __new__(cls):
@@ -45,6 +46,7 @@ class Deck(object):
 
     @classmethod
     def deal_hand(self, players):
+        ''' takes a list of players and creates a hand for each one '''
         for player in players:
             cards = []
             for _ in range(12):
@@ -52,6 +54,7 @@ class Deck(object):
             player.set_hand(cards)
 
 class Player:
+    ''' Represents the states and operations for a player '''
     def __init__(self):
         self._hand = []
         self._drawn_card = None
@@ -93,6 +96,7 @@ class Player:
         return True
   
 class GameState(object):
+    ''' Singleton class that keeps track of the state of the game '''
     __instance = None
 
     def __new__(cls, players, deck):

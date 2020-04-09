@@ -1,9 +1,9 @@
 '''Contains constants used to draw elements of the UI'''
-
 ###############################################################################
 # Main game constants
 ###############################################################################
 
+# Main screen dimensions
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 
@@ -28,6 +28,7 @@ CARD_ART = {
     12: 'card_12.png',
     -1: 'card_-1.png',
     -2: 'card_-2.png',
+    'card_back': 'card_back.png'
 }
 
 ################################################################################
