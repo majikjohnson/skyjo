@@ -10,6 +10,11 @@ SCREEN_HEIGHT = 720
 # Colour Tuples
 BLACK = (0, 0, 0)
 SADDLE_BROWN = (139, 69, 19)
+GREEN = (0, 255, 0)
+
+# Font
+
+MAIN_FONT = 'comicsansms'
 
 # Card art list
 CARD_ART = {
@@ -28,7 +33,8 @@ CARD_ART = {
     12: 'card_12.png',
     -1: 'card_-1.png',
     -2: 'card_-2.png',
-    'card_back': 'card_back.png'
+    'card_back': 'card_back.png',
+    'placeholder': 'card_placeholder.png'
 }
 
 ################################################################################
@@ -49,3 +55,39 @@ CARD_PADDING = 10
 # Sets size of the cards
 CARD_WIDTH = 50
 CARD_HEIGHT = 75
+
+# Player label font size
+PLAYER_LBL_FONT_SIZE = 40
+
+# Player lable positioning
+PLAYER_LBL_POS_X = (HAND_PANEL_WIDTH / 2)
+PLAYER_LBL_POS_Y = 10
+
+#################################################################################
+# Constants for the panel showing the player's currently drawn card
+#################################################################################
+
+# Panel dimensions
+DRAW_PANEL_WIDTH = 310
+DRAW_PANEL_HEIGHT = 95
+
+# Panel coordinates
+DRAW_PANEL_X = 0
+DRAW_PANEL_Y = HAND_PANEL_HEIGHT
+
+# Panel padding
+DRAW_PANEL_PADDING_TOP = 20
+
+# Card position in Panel
+DRAW_PANEL_CARD_POS_X = (DRAW_PANEL_WIDTH / 2) - (CARD_WIDTH / 3)
+DRAW_PANEL_CARD_POS_Y = DRAW_PANEL_Y + DRAW_PANEL_PADDING_TOP
+
+##################################################################################
+# Constants for the panel showing the draw and discard piles
+##################################################################################
+
+# Panel dimensions
+DECK_PANEL_HEIGHT = 95
+
+# Panel coordinates
+DECK_PANEL_Y = DRAW_PANEL_Y + DRAW_PANEL_HEIGHT
