@@ -15,6 +15,8 @@ class Deck(object):
             cls.__instance._draw_pile.extend(itertools.repeat(-1, 10))
             for num in range(1, 13):
                 cls.__instance._draw_pile.extend(itertools.repeat(num, 10))
+            card = cls.__instance.draw_card()
+            cls.__instance.discard_card(card)
         return cls.__instance
 
     @classmethod
@@ -45,12 +47,12 @@ class Deck(object):
         return len(cls.__instance._draw_pile)
 
     @classmethod
-    def deal_hand(self, players):
+    def deal_hand(cls, players):
         ''' takes a list of players and creates a hand for each one '''
         for player in players:
             cards = []
             for _ in range(12):
-                cards.append(self.draw_card())
+                cards.append(cls.__instance.draw_card())
             player.set_hand(cards)
 
 class Player:
@@ -103,6 +105,7 @@ class GameState(object):
         if cls.__instance is None:
             cls.__instance = object.__new__(cls)
             cls.__instance._players = players
+            cls.__instance._deck = deck
             cls.__instance._current_player = 0
             cls.__instance._game_over = False
             cls.__instance._remaining_turns = deck.draw_pile_size()
@@ -136,3 +139,8 @@ class GameState(object):
     def current_player_index(cls):
         ''' Returns an int representing the index of the currently active player '''
         return cls.__instance._current_player
+
+    @classmethod
+    def get_deck(cls):
+        ''' Returns the deck '''
+        return cls.__instance._deck

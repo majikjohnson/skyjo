@@ -60,7 +60,7 @@ CARD_HEIGHT = 75
 PLAYER_LBL_FONT_SIZE = 40
 
 # Player lable positioning
-PLAYER_LBL_POS_X = (HAND_PANEL_WIDTH / 2)
+PLAYER_LBL_POS_X = int(HAND_PANEL_WIDTH / 2)
 PLAYER_LBL_POS_Y = 10
 
 #################################################################################
@@ -79,7 +79,7 @@ DRAW_PANEL_Y = HAND_PANEL_HEIGHT
 DRAW_PANEL_PADDING_TOP = 20
 
 # Card position in Panel
-DRAW_PANEL_CARD_POS_X = (DRAW_PANEL_WIDTH / 2) - (CARD_WIDTH / 3)
+DRAW_PANEL_CARD_POS_X = int((DRAW_PANEL_WIDTH / 2) - (CARD_WIDTH / 3))
 DRAW_PANEL_CARD_POS_Y = DRAW_PANEL_Y + DRAW_PANEL_PADDING_TOP
 
 ##################################################################################
@@ -89,5 +89,8 @@ DRAW_PANEL_CARD_POS_Y = DRAW_PANEL_Y + DRAW_PANEL_PADDING_TOP
 # Panel dimensions
 DECK_PANEL_HEIGHT = 95
 
+# Panel padding
+DECK_PANEL_PADDING_TOP = 100
+
 # Panel coordinates
-DECK_PANEL_Y = DRAW_PANEL_Y + DRAW_PANEL_HEIGHT
+DECK_PANEL_Y = DRAW_PANEL_HEIGHT + HAND_PANEL_HEIGHT + DECK_PANEL_PADDING_TOP
