@@ -15,7 +15,7 @@ setup(
             'flake8',
             'pycodestyle'
         ]
-    }
+    },
     entry_points = {
         "gui_scripts": [
             "skyjo = skyjo.main:controller"
