@@ -1,5 +1,6 @@
 from random import randrange
 import itertools
+from enum import Enum
 
 class Deck(object):
     ''' Sigleton class used for managing the card deck '''
@@ -96,10 +97,21 @@ class Player:
             if card[1] == False:
                 return False
         return True
-  
+
+    def visible_card_count(self):
+        visible_cards = 0
+        for card in self._hand:
+            if card[1] == True:
+                visible_cards += 1
+        return visible_cards
+
+Phase = Enum('Phase', 'round_prep draw discard game_over')
+
 class GameState(object):
     ''' Singleton class that keeps track of the state of the game '''
     __instance = None
+
+    round_prep, draw, discard, game_over = (0, 1, 2, 3)
 
     def __new__(cls, players, deck):
         if cls.__instance is None:
@@ -107,10 +119,11 @@ class GameState(object):
             cls.__instance._players = players
             cls.__instance._deck = deck
             cls.__instance._current_player = 0
+            cls.__instance.current_phase = Phase.round_prep
             cls.__instance._game_over = False
             cls.__instance._remaining_turns = deck.draw_pile_size()
         return cls.__instance
-    
+
     @classmethod
     def end_turn(cls):
         ''' Runs end turn procedure and returns a boolean indicating if the game is over or not '''
@@ -134,6 +147,14 @@ class GameState(object):
     def get_players(cls):
         ''' Returns a list containing all players '''
         return cls.__instance._players
+
+    @classmethod
+    def rotate_player(cls):
+        ''' Sets the current plater to the next player '''
+        if cls.__instance._current_player == len(cls.__instance._players) - 1:
+            cls.__instance._current_player = 0
+        else:
+            cls.__instance._current_player += 1
 
     @classmethod
     def current_player_index(cls):

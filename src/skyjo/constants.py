@@ -3,6 +3,8 @@
 # Main game constants
 ###############################################################################
 
+TICK_RATE = 60
+
 # Main screen dimensions
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
@@ -13,10 +15,10 @@ SADDLE_BROWN = (139, 69, 19)
 GREEN = (0, 255, 0)
 
 # Font
-
 MAIN_FONT = 'comicsansms'
 
 # Card art list
+CARD_ART_DIR = 'art'
 CARD_ART = {
     0: 'card_0.png',
     1: 'card_1.png',

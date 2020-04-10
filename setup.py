@@ -10,9 +10,15 @@ setup(
     install_requires=[
         'pygame'
     ],
+    extra_require={
+        'dev-atom': [
+            'flake8',
+            'pycodestyle'
+        ]
+    }
     entry_points = {
         "gui_scripts": [
-            "skyjo = skyjo.main:gui"
+            "skyjo = skyjo.main:controller"
         ]
     }
 )
