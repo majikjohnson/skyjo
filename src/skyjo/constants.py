@@ -57,11 +57,11 @@ CARD_WIDTH = 50
 CARD_HEIGHT = 75
 
 # Player label font size
-PLAYER_LBL_FONT_SIZE = 40
+PLAYER_LBL_FONT_SIZE = 30
 
 # Player lable positioning
 PLAYER_LBL_POS_X = int(HAND_PANEL_WIDTH / 2)
-PLAYER_LBL_POS_Y = 10
+PLAYER_LBL_POS_Y = 5
 
 #################################################################################
 # Constants for the panel showing the player's currently drawn card
