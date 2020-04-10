@@ -1,12 +1,12 @@
 # Skyjo main game algorithm
 
 
-## Modes
+## Phases
 
-1. Initial visible card selection
-2. Card draw
-3. Replace or discard
-4. Game over
+1. round_prep
+2. draw
+3. discard
+4. game_over
 
 ## Model
 ```
@@ -23,10 +23,10 @@ skyjo_model = {
 ```
 ## For each iteration
   # get current_player
-  # get current_mode
+  # get current_phase
   # get click_coordinates
 
-## current_mode == initial visible card selection
+## current_phase == round_prep
   # if click_coordinates within bounds of current_player hidden cards
     # reveal hidden card
     # if current_player has two visible cards on their board
@@ -34,14 +34,19 @@ skyjo_model = {
     # if all players have two cards visible
       # move GameState.mode to card draw mode
 
-## current_mode == card draw
+## current_phase == draw
   # if click_coordinates within bounds of the draw pile or discard pile
     # if draw pile chosen
       # draw card from draw draw pile
       # add drawn card to player's active card area
       # move GameState.mode to replace_or_discard
+    # if discard pile chosen
+      # remove card from discard pile
+      # add card to players' active card area
+      # move GameState.mode to replace_or_discard
 
-## current_mode = replace or discard
+
+## current_phase = discard
   # if click_coordinates within bounds of the current_player visible cards
     # replace clicked card with active card
     # move clicked card to the top of the discard pile
@@ -55,7 +60,7 @@ skyjo_model = {
     # move GameState.current_player to next player
     # call GameState.end_turn
 
-## if GameState.game_over is True
+## if game_over is True
   # move GameState.mode to game over mode
 
 

@@ -1,8 +1,7 @@
 import pygame
-from skyjo import constants
 from skyjo.game import Deck, Player, GameState, Phase
 from skyjo.gui import SkyjoView
-from enum import Enum
+
 
 def init_game(number_of_players):
     ''' Returns a GameState object configured with initial settings '''
@@ -10,6 +9,7 @@ def init_game(number_of_players):
     players = [Player() for _ in range(number_of_players)]
     deck.deal_hand(players)
     return GameState(players, deck)
+
 
 def controller():
     number_of_players = 4
@@ -25,6 +25,7 @@ def controller():
         current_player = game_state.get_current_player()
         current_player_index = game_state.current_player_index()
         current_phase = game_state.current_phase
+        deck = game_state.get_deck()
 
         # Handle input events
         mouse_clicked = False
@@ -40,8 +41,8 @@ def controller():
             if mouse_clicked:
                 mouse_clicked = False
                 hand_card_rects = ui_coords['hand'][current_player_index]
-                for i, card in enumerate(hand_card_rects):
-                    if card.collidepoint(mouse_x, mouse_y):
+                for i, card_rect in enumerate(hand_card_rects):
+                    if card_rect.collidepoint(mouse_x, mouse_y):
                         if not current_player.card_visible(i):
                             current_player.reveal_card(i)
                             if current_player.visible_card_count() == 2:
@@ -49,9 +50,53 @@ def controller():
                                 if game_state.current_player_index() == 0:
                                     game_state.current_phase = Phase.draw
 
+        if current_phase == Phase.draw:
+            if mouse_clicked:
+                mouse_clicked = False
+                draw_card_rect = ui_coords['draw']
+                discard_card_rect = ui_coords['discard']
+                if draw_card_rect.collidepoint(mouse_x, mouse_y):
+                    current_player.draw_card(deck)
+                    game_state.current_phase = Phase.discard
+                    update_view = True
+                elif discard_card_rect.collidepoint(mouse_x, mouse_y):
+                    current_player.draw_discarded_card(deck)
+                    game_state.current_phase = Phase.discard
+                    update_view = True
+
+        if current_phase == Phase.discard:
+            if mouse_clicked:
+                mouse_clicked = False
+                card_source = current_player.get_active_card_source()
+                if card_source == 'draw_pile':
+                    hand_card_rects = ui_coords['hand'][current_player_index]
+                    for i, card_rect in enumerate(hand_card_rects):
+                        if card_rect.collidepoint(mouse_x, mouse_y):
+                            if current_player.card_visible(i):
+                                current_player.switch_card(i, deck)
+                                game_state.current_phase = Phase.draw
+                                game_state.end_turn()
+                                update_view = True
+                            else:
+                                current_player.discard_active_card(deck)
+                                current_player.reveal_card(i)
+                                game_state.current_phase = Phase.draw
+                                game_state.end_turn()
+                                update_view = True
+                elif card_source == 'discard_pile':
+                    hand_card_rects = ui_coords['hand'][current_player_index]
+                    for i, card_rect in zip(range(12), hand_card_rects):
+                        if current_player.card_visible(i):
+                            if card_rect.collidepoint(mouse_x, mouse_y):
+                                current_player.switch_card(i, deck)
+                                game_state.current_phase = Phase.draw
+                                game_state.end_turn()
+                                update_view = True
+
         if update_view:
             ui_coords = view.update_display(game_state)
             update_view = False
+
 
 if __name__ == "__main__":
     controller()

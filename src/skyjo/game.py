@@ -2,6 +2,7 @@ from random import randrange
 import itertools
 from enum import Enum
 
+
 class Deck(object):
     ''' Sigleton class used for managing the card deck '''
     __instance = None
@@ -56,11 +57,12 @@ class Deck(object):
                 cards.append(cls.__instance.draw_card())
             player.set_hand(cards)
 
+
 class Player:
     ''' Represents the states and operations for a player '''
     def __init__(self):
         self._hand = []
-        self._drawn_card = None
+        self._active_card = None
 
     def set_hand(self, cards):
         ''' Takes a list of cards and adds them to hand '''
@@ -79,9 +81,9 @@ class Player:
     def switch_card(self, index, deck):
         ''' Switches the card at the given index with the last drawn card.  Old card is added to the deck discard pile '''
         old_card = self._hand[index][0]
-        self._hand[index][0] = self._drawn_card
+        self._hand[index][0] = self._active_card[0]
+        self._active_card = None
         deck.discard_card(old_card)
-        return self._hand[index][0]
 
     def card_visible(self, index):
         ''' Returns boolean indicating if the card at the given index is visibile or not '''
@@ -89,7 +91,31 @@ class Player:
 
     def draw_card(self, deck):
         ''' Draw a card from the deck draw pile '''
-        self._drawn_card = deck.draw_card()
+        self._active_card = (deck.draw_card(), True)
+
+    def draw_discarded_card(self, deck):
+        ''' Draw a card from the deck discard pile '''
+        self._active_card = (deck.draw_discarded_card(), False)
+
+    def get_active_card(self):
+        ''' Returns the most recently drawn card.  If no card is active then returns None '''
+        if self._active_card is None:
+            return None
+        return self._active_card[0]
+
+    def get_active_card_source(self):
+        ''' Returns either the string 'draw' or 'discard' to indicate where the active card was drawn from '''
+        if self._active_card is None:
+            return None
+        if self._active_card[1]:
+            return 'draw_pile'
+        return 'discard_pile'
+
+    def discard_active_card(self, deck):
+        ''' Sends most recently drawn card to the discard pile '''
+        if self._active_card is not None:
+            deck.discard_card(self._active_card[0])
+            self._active_card = None
 
     def all_cards_visible(self):
         ''' Returns a boolean indicating if all of the player's cards are visibile or not '''
@@ -105,7 +131,9 @@ class Player:
                 visible_cards += 1
         return visible_cards
 
+
 Phase = Enum('Phase', 'round_prep draw discard game_over')
+
 
 class GameState(object):
     ''' Singleton class that keeps track of the state of the game '''

@@ -3,6 +3,7 @@ import os
 from skyjo import constants as const
 from skyjo.game import Deck, Player, GameState
 
+
 class SkyjoView():
     ''' Singleton class that displays the model in the GUI '''
     __instance = None
@@ -12,19 +13,24 @@ class SkyjoView():
             cls.__instance = object.__new__(cls)
             pygame.init()
             working_dir = os.path.dirname(__file__)
-            cls.__instance._art_dir = os.path.join(working_dir, const.CARD_ART_DIR)
-            cls.__instance._screen = pygame.display.set_mode((const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
+            cls.__instance._art_dir = os.path.join(working_dir,
+                                                   const.CARD_ART_DIR)
+            cls.__instance._screen = pygame.display.set_mode((const.SCREEN_WIDTH,
+                                                              const.SCREEN_HEIGHT))
             cls.__instance._clock = pygame.time.Clock()
         return cls.__instance
 
     @classmethod
     def update_display(cls, game_state):
         ui_coords = {
-            'hand': []
+            'hand': [],
+            'active': []
         }
 
         # Set convenience variables
         art_dir = cls.__instance._art_dir
+        card_back = const.CARD_ART['card_back']
+        placehoder = const.CARD_ART['placeholder']
         players = game_state.get_players()
         no_of_players = len(players)
         current_player_no = game_state.current_player_index()
@@ -43,14 +49,17 @@ class SkyjoView():
             card_itr = 0
             for row in range(3):
                 for col in range(4):
-                    card_filename = const.CARD_ART['card_back']
+                    card_filename = card_back
                     current_card = player.get_card(card_itr)
                     if player.card_visible(card_itr):
                         card_filename = const.CARD_ART[current_card]
                     card_itr += 1
 
-                    card_img = pygame.image.load(os.path.join(art_dir, card_filename))
-                    card_img = pygame.transform.scale(card_img, (const.CARD_WIDTH, const.CARD_HEIGHT))
+                    card_img = pygame.image.load(os.path.join(art_dir,
+                                                              card_filename))
+                    card_img = pygame.transform.scale(card_img,
+                                                      (const.CARD_WIDTH,
+                                                       const.CARD_HEIGHT))
                     card_rect = card_img.get_rect()
                     card_rect.x = card_x + (const.CARD_PADDING * col)
                     card_rect.y = card_y + (const.CARD_PADDING * row)
@@ -62,8 +71,50 @@ class SkyjoView():
                     card_h = card_rect.height
                 card_y += card_h
                 card_x = const.HAND_PANEL_PADDING_LEFT + hand_panel_spacer
-            hand_panel_spacer += const.HAND_PANEL_WIDTH
             ui_coords['hand'].append(hand_rects)
+
+            # Draw placeholder for drawn card
+            card_no = player.get_active_card()
+            card_filename = placehoder
+            if card_no is not None:
+                card_filename = const.CARD_ART[card_no]
+            card_img = pygame.image.load(os.path.join(art_dir, card_filename))
+            card_img = pygame.transform.scale(card_img,
+                                              (const.CARD_WIDTH + 2,
+                                               const.CARD_HEIGHT + 2))
+            card_rect = card_img.get_rect()
+            card_rect.x = const.DRAW_PANEL_CARD_POS_X + hand_panel_spacer
+            card_rect.y = const.DRAW_PANEL_CARD_POS_Y
+            screen.blit(card_img, card_rect)
+            ui_coords['active'].append(card_rect)
+
+            hand_panel_spacer += const.HAND_PANEL_WIDTH
+
+        # Draw the deck (discard and draw piles)
+        card_no = deck.get_discarded_card()
+        card_filename = placehoder
+        if card_no is not None:
+            card_filename = const.CARD_ART[card_no]
+        card_img = pygame.image.load(os.path.join(art_dir, card_filename))
+        card_img = pygame.transform.scale(card_img, (const.CARD_WIDTH + 2,
+                                                     const.CARD_HEIGHT + 2))
+        card_rect = card_img.get_rect()
+        card_rect.x = int(((no_of_players * const.DRAW_PANEL_WIDTH) / 2) -
+                          (const.CARD_WIDTH * 1.5))
+        card_rect.y = const.DECK_PANEL_Y
+        screen.blit(card_img, card_rect)
+        ui_coords['discard'] = card_rect
+
+        card_filename = card_back
+        card_img = pygame.image.load(os.path.join(art_dir, card_filename))
+        card_img = pygame.transform.scale(card_img, (const.CARD_WIDTH + 2,
+                                                     const.CARD_HEIGHT + 2))
+        card_rect = card_img.get_rect()
+        card_rect.x = int(((no_of_players * const.DRAW_PANEL_WIDTH) / 2) +
+                          (const.CARD_WIDTH * 1.5))
+        card_rect.y = const.DECK_PANEL_Y
+        screen.blit(card_img, card_rect)
+        ui_coords['draw'] = card_rect
 
 
 
