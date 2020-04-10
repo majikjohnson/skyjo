@@ -38,6 +38,8 @@ class SkyjoView():
         screen = cls.__instance._screen
         clock = cls.__instance._clock
 
+        screen.fill(const.SADDLE_BROWN)
+
         # diaplay player hand panels
         hand_panel_spacer = 0
         for player_no, player in enumerate(players):
@@ -87,6 +89,18 @@ class SkyjoView():
             card_rect.y = const.DRAW_PANEL_CARD_POS_Y
             screen.blit(card_img, card_rect)
             ui_coords['active'].append(card_rect)
+
+            # Draw player name label
+            player_label_colour = const.BLACK
+            if player_no == current_player_no:
+                player_label_colour = const.GREEN
+
+            font = pygame.font.SysFont(const.MAIN_FONT, const.PLAYER_LBL_FONT_SIZE)
+            txt_player_no = font.render(f'Player {player_no + 1}', True, player_label_colour)
+            txt_rect = txt_player_no.get_rect()
+            txt_rect.x = int(const.PLAYER_LBL_POS_X - (txt_player_no.get_width() / 2) + hand_panel_spacer)
+            txt_rect.y = const.PLAYER_LBL_POS_Y
+            screen.blit(txt_player_no, txt_rect)
 
             hand_panel_spacer += const.HAND_PANEL_WIDTH
 
