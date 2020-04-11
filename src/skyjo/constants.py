@@ -11,6 +11,7 @@ SCREEN_HEIGHT = 720
 
 # Colour Tuples
 BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 SADDLE_BROWN = (139, 69, 19)
 GREEN = (0, 255, 0)
 
@@ -58,10 +59,12 @@ CARD_PADDING = 10
 CARD_WIDTH = 50
 CARD_HEIGHT = 75
 
-# Player label font size
+# Player label font
 PLAYER_LBL_FONT_SIZE = 30
+PLAYER_LBL_COLOUR_DEFAULT = BLACK
+PLAYER_LBL_COLOUR_ACTIVE = GREEN
 
-# Player lable positioning
+# Player label positioning
 PLAYER_LBL_POS_X = int(HAND_PANEL_WIDTH / 2)
 PLAYER_LBL_POS_Y = 5
 
@@ -74,15 +77,28 @@ DRAW_PANEL_WIDTH = 310
 DRAW_PANEL_HEIGHT = 95
 
 # Panel coordinates
-DRAW_PANEL_X = 0
 DRAW_PANEL_Y = HAND_PANEL_HEIGHT
 
 # Panel padding
 DRAW_PANEL_PADDING_TOP = 20
+DRAW_PANEL_PADDING_LEFT = HAND_PANEL_PADDING_LEFT + 5
+DRAW_PANEL_POINTS_PADDING_LEFT = 20
+DRAW_PANEL_POINTS_PADDING_TOP = 25
 
 # Card position in Panel
 DRAW_PANEL_CARD_POS_X = int((DRAW_PANEL_WIDTH / 2) - (CARD_WIDTH / 3))
+DRAW_PANEL_CARD_POS_X = DRAW_PANEL_PADDING_LEFT
 DRAW_PANEL_CARD_POS_Y = DRAW_PANEL_Y + DRAW_PANEL_PADDING_TOP
+
+# Points position in panel
+DRAW_PANEL_POINTS_POS_X = (
+    DRAW_PANEL_CARD_POS_X + CARD_WIDTH + DRAW_PANEL_POINTS_PADDING_LEFT
+)
+DRAW_PANEL_POINTS_POS_Y = DRAW_PANEL_Y + DRAW_PANEL_POINTS_PADDING_TOP
+
+# Points label font
+POINTS_LBL_FONT_SIZE = 25
+POINTS_LBL_COLOUR = WHITE
 
 ###############################################################################
 # Constants for the panel showing the draw and discard piles

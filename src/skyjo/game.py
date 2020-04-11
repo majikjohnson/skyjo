@@ -131,6 +131,13 @@ class Player:
                 visible_cards += 1
         return visible_cards
 
+    def get_round_points(self):
+        points = 0
+        for card in self._hand:
+            if card[1]:
+                points += card[0]
+        return points
+
 
 Phase = Enum('Phase', 'round_prep draw discard game_over')
 
@@ -190,6 +197,22 @@ class GameState(object):
         return cls.__instance._current_player
 
     @classmethod
+    def set_current_player(cls, index):
+        ''' Sets the current player to the given index '''
+        cls.__instance._current_player = index
+
+    @classmethod
     def get_deck(cls):
         ''' Returns the deck '''
         return cls.__instance._deck
+
+    @classmethod
+    def highest_points_player_index(cls):
+        ''' Returns the index of the player with the highest points in the current round '''
+        player_index = 0
+        highest_points = -5
+        for i, player in enumerate(cls.__instance._players):
+            if player.get_round_points() > highest_points:
+                highest_points = player.get_round_points()
+                player_index = i
+        return player_index

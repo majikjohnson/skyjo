@@ -12,7 +12,7 @@ def init_game(number_of_players):
 
 
 def controller():
-    number_of_players = 2
+    number_of_players = 4
     game_state = init_game(number_of_players)
     view = SkyjoView()
 
@@ -48,6 +48,8 @@ def controller():
                             if current_player.visible_card_count() == 2:
                                 game_state.rotate_player()
                                 if game_state.current_player_index() == 0:
+                                    start_player = game_state.highest_points_player_index()
+                                    game_state.set_current_player(start_player)
                                     game_state.current_phase = Phase.draw
 
         if current_phase == Phase.draw:

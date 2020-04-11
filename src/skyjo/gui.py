@@ -42,7 +42,7 @@ class SkyjoView():
 
         screen.fill(const.SADDLE_BROWN)
 
-        # diaplay player hand panels
+        # display player hand panels
         hand_panel_spacer = 0
         for player_no, player in enumerate(players):
             card_x = const.HAND_PANEL_PADDING_LEFT + hand_panel_spacer
@@ -77,7 +77,7 @@ class SkyjoView():
                 card_x = const.HAND_PANEL_PADDING_LEFT + hand_panel_spacer
             ui_coords['hand'].append(hand_rects)
 
-            # Draw placeholder for drawn card
+            # Draw active card panel
             card_no = player.get_active_card()
             card_filename = placehoder
             if card_no is not None:
@@ -92,10 +92,22 @@ class SkyjoView():
             screen.blit(card_img, card_rect)
             ui_coords['active'].append(card_rect)
 
+            # Draw player score in active card panel
+            points = player.get_round_points()
+            points_label_colour = const.POINTS_LBL_COLOUR
+            font = pygame.font.SysFont(const.MAIN_FONT,
+                                       const.POINTS_LBL_FONT_SIZE)
+            txt_points = font.render(f'Round points: {points}',
+                                     True, points_label_colour)
+            txt_rect = txt_points.get_rect()
+            txt_rect.x = const.DRAW_PANEL_POINTS_POS_X + hand_panel_spacer
+            txt_rect.y = const.DRAW_PANEL_POINTS_POS_Y
+            screen.blit(txt_points, txt_rect)
+
             # Draw player name label
-            player_label_colour = const.BLACK
+            player_label_colour = const.PLAYER_LBL_COLOUR_DEFAULT
             if player_no == current_player_no:
-                player_label_colour = const.GREEN
+                player_label_colour = const.PLAYER_LBL_COLOUR_ACTIVE
 
             font = pygame.font.SysFont(const.MAIN_FONT,
                                        const.PLAYER_LBL_FONT_SIZE)
