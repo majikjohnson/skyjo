@@ -63,6 +63,7 @@ class Player:
     def __init__(self):
         self._hand = []
         self._active_card = None
+        self._score = 0
 
     def set_hand(self, cards):
         ''' Takes a list of cards and adds them to hand '''
@@ -125,28 +126,36 @@ class Player:
         return True
 
     def visible_card_count(self):
+        ''' Returns an int indicating the number of visible cards '''
         visible_cards = 0
         for card in self._hand:
-            if card[1] == True:
+            if card[1]:
                 visible_cards += 1
         return visible_cards
 
     def get_round_points(self):
+        ''' Returns an int indicating the player's piont total for the current round '''
         points = 0
         for card in self._hand:
             if card[1]:
                 points += card[0]
         return points
 
+    def end_round(self):
+        ''' Updates the player's score and resets their hand  '''
+        self._score += self.get_round_points()
+        self._hand = []
+        self._active_card = None
 
-Phase = Enum('Phase', 'round_prep draw discard game_over')
+
+Phase = Enum('Phase', 'round_prep draw discard round_over game_over')
 
 
 class GameState(object):
     ''' Singleton class that keeps track of the state of the game '''
     __instance = None
 
-    round_prep, draw, discard, game_over = (0, 1, 2, 3)
+    round_prep, draw, discard, round_over, game_over = (0, 1, 2, 3, 4)
 
     def __new__(cls, players, deck):
         if cls.__instance is None:
@@ -155,7 +164,8 @@ class GameState(object):
             cls.__instance._deck = deck
             cls.__instance._current_player = 0
             cls.__instance.current_phase = Phase.round_prep
-            cls.__instance._game_over = False
+            cls.__instance.round_over = False
+            cls.__instance.game_over = False
             cls.__instance._remaining_turns = deck.draw_pile_size()
         return cls.__instance
 
@@ -170,8 +180,8 @@ class GameState(object):
                 cls.__instance._current_player = 0
             else:
                 cls.__instance._current_player += 1
-            return False
-        return True
+        else:
+            cls.__instance.round_over = True
 
     @classmethod
     def get_current_player(cls):

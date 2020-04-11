@@ -23,6 +23,27 @@ class SkyjoView():
         return cls.__instance
 
     @classmethod
+    def show_round_summary(cls, game_state):
+        screen = cls.__instance._screen
+        players = game_state.get_players()
+        scores = []
+        for i, player in enumerate(players):
+            scores.append((f'Player {i + 1}', player.get_round_points()))
+        scores.sort(key=lambda tup: tup[1])
+        print(scores)
+        for i, score in enumerate(scores):
+            font = pygame.font.SysFont(const.MAIN_FONT,
+                                       const.PLAYER_LBL_FONT_SIZE)
+            txt_score = font.render(f'{score[0]} - {score[1]}', True, const.WHITE)
+            txt_rect = txt_score.get_rect()
+            txt_rect.x = const.SCORE_PANEL_X
+            print(f'x: {txt_rect.x}')
+            txt_rect.y = const.SCORE_PANEL_Y + (i * const.SCORE_PANEL_TEXT_PADDING_TOP)
+            print(f'y: {txt_rect.y}')
+            screen.blit(txt_score, txt_rect)
+        pygame.display.flip()
+
+    @classmethod
     def update_display(cls, game_state):
         ui_coords = {
             'hand': [],

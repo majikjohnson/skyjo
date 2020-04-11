@@ -21,23 +21,11 @@ MAIN_FONT = 'comicsansms'
 # Card art list
 CARD_ART_DIR = 'art'
 CARD_ART = {
-    0: 'card_0.png',
-    1: 'card_1.png',
-    2: 'card_2.png',
-    3: 'card_3.png',
-    4: 'card_4.png',
-    5: 'card_5.png',
-    6: 'card_6.png',
-    7: 'card_7.png',
-    8: 'card_8.png',
-    9: 'card_9.png',
-    10: 'card_10.png',
-    11: 'card_11.png',
-    12: 'card_12.png',
-    -1: 'card_-1.png',
-    -2: 'card_-2.png',
-    'card_back': 'card_back.png',
-    'placeholder': 'card_placeholder.png'
+    0: 'card_0.png', 1: 'card_1.png', 2: 'card_2.png', 3: 'card_3.png',
+    4: 'card_4.png', 5: 'card_5.png', 6: 'card_6.png', 7: 'card_7.png',
+    8: 'card_8.png', 9: 'card_9.png', 10: 'card_10.png', 11: 'card_11.png',
+    12: 'card_12.png', -1: 'card_-1.png', -2: 'card_-2.png',
+    'card_back': 'card_back.png',  'placeholder': 'card_placeholder.png'
 }
 
 ###############################################################################
@@ -112,3 +100,20 @@ DECK_PANEL_PADDING_TOP = 100
 
 # Panel coordinates
 DECK_PANEL_Y = DRAW_PANEL_HEIGHT + HAND_PANEL_HEIGHT + DECK_PANEL_PADDING_TOP
+
+###############################################################################
+# Constants for round summary panel
+###############################################################################
+
+# Panel dimensions
+SCORE_PANEL_WIDTH = 100
+SCORE_PANEL_HEIGHT = 95
+
+# Panel padding
+SCORE_PANEL_PADDING_TOP = 10
+SCORE_PANEL_PADDING_LEFT = 10
+SCORE_PANEL_TEXT_PADDING_TOP = 20
+
+# Panel coordinates
+SCORE_PANEL_X = int((SCREEN_WIDTH / 2) - (SCORE_PANEL_WIDTH / 2))
+SCORE_PANEL_Y = DRAW_PANEL_HEIGHT + HAND_PANEL_HEIGHT

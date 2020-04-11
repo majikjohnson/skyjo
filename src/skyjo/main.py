@@ -20,6 +20,7 @@ def controller():
 
     running = True
     update_view = True
+    round_summary_view = True
     while running:
         # convenience variables
         current_player = game_state.get_current_player()
@@ -95,9 +96,18 @@ def controller():
                                 game_state.end_turn()
                                 update_view = True
 
+        if current_phase == Phase.round_over:
+            round_summary_view = True
+
+        if game_state.round_over:
+            game_state.current_phase = Phase.round_over
+
         if update_view:
             ui_coords = view.update_display(game_state)
             update_view = False
+        if round_summary_view:
+            view.show_round_summary(game_state)
+            round_summary_view = False
 
 
 if __name__ == "__main__":
