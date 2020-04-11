@@ -1,7 +1,6 @@
 import pygame
 import os
 from skyjo import constants as const
-from skyjo.game import Deck, Player, GameState
 
 
 class SkyjoView():
@@ -17,6 +16,7 @@ class SkyjoView():
                                                    const.CARD_ART_DIR)
             cls.__instance._screen = pygame.display.set_mode((const.SCREEN_WIDTH,
                                                               const.SCREEN_HEIGHT))
+            pygame.display.set_caption('Skyjo')
             cls.__instance._clock = pygame.time.Clock()
         return cls.__instance
 
@@ -129,9 +129,6 @@ class SkyjoView():
         card_rect.y = const.DECK_PANEL_Y
         screen.blit(card_img, card_rect)
         ui_coords['draw'] = card_rect
-
-
-
 
         # End of function
         pygame.display.flip()

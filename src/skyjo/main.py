@@ -12,7 +12,7 @@ def init_game(number_of_players):
 
 
 def controller():
-    number_of_players = 4
+    number_of_players = 2
     game_state = init_game(number_of_players)
     view = SkyjoView()
 
