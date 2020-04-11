@@ -118,10 +118,5 @@ def controller():
             round_summary_view = False
 
 
-        print(f'Current Phase: {game_state.current_phase}')
-        print(f'Round Summary View: {round_summary_view}')
-
-
-
 if __name__ == "__main__":
     controller()

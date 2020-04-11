@@ -179,6 +179,7 @@ class GameState(object):
         cls.__instance._current_player = 0
         cls.__instance.current_phase = Phase.round_prep
         cls.__instance.round_over = False
+        cls.__instance._final_rotation = False
         cls.__instance._remaining_turns = cls.__instance._deck.draw_pile_size()
 
 
@@ -187,8 +188,9 @@ class GameState(object):
         ''' Runs end turn procedure and returns a boolean indicating if the game is over or not '''
         cls.__instance._remaining_turns -= 1
         if cls.__instance._remaining_turns > 0:
-            if cls.__instance._players[cls.__instance._current_player].all_cards_visible():
+            if cls.__instance._players[cls.__instance._current_player].all_cards_visible() and not cls.__instance._final_rotation:
                 cls.__instance._remaining_turns = len(cls.__instance._players) - 1
+                cls.__instance._final_rotation = True
             if cls.__instance._current_player == len(cls.__instance._players) - 1:
                 cls.__instance._current_player = 0
             else:
