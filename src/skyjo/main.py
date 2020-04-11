@@ -23,7 +23,7 @@ def controller():
     while running:
         # convenience variables
         current_player = game_state.get_current_player()
-        current_player_index = game_state.current_player_index()
+        active_player_index = game_state.active_player_index()
         current_phase = game_state.current_phase
         deck = game_state.get_deck()
 
@@ -40,14 +40,14 @@ def controller():
         if current_phase == Phase.round_prep:
             if mouse_clicked:
                 mouse_clicked = False
-                hand_card_rects = ui_coords['hand'][current_player_index]
+                hand_card_rects = ui_coords['hand'][active_player_index]
                 for i, card_rect in enumerate(hand_card_rects):
                     if card_rect.collidepoint(mouse_x, mouse_y):
                         if not current_player.card_visible(i):
                             current_player.reveal_card(i)
                             if current_player.visible_card_count() == 2:
                                 game_state.rotate_player()
-                                if game_state.current_player_index() == 0:
+                                if game_state.active_player_index() == 0:
                                     start_player = game_state.highest_points_player_index()
                                     game_state.set_current_player(start_player)
                                     game_state.current_phase = Phase.draw
@@ -71,7 +71,7 @@ def controller():
                 mouse_clicked = False
                 card_source = current_player.get_active_card_source()
                 if card_source == 'draw_pile':
-                    hand_card_rects = ui_coords['hand'][current_player_index]
+                    hand_card_rects = ui_coords['hand'][active_player_index]
                     for i, card_rect in enumerate(hand_card_rects):
                         if card_rect.collidepoint(mouse_x, mouse_y):
                             if current_player.card_visible(i):
@@ -86,7 +86,7 @@ def controller():
                                 game_state.end_turn()
                                 update_view = True
                 elif card_source == 'discard_pile':
-                    hand_card_rects = ui_coords['hand'][current_player_index]
+                    hand_card_rects = ui_coords['hand'][active_player_index]
                     for i, card_rect in zip(range(12), hand_card_rects):
                         if current_player.card_visible(i):
                             if card_rect.collidepoint(mouse_x, mouse_y):

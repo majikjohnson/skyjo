@@ -118,9 +118,9 @@ class Player:
             self._active_card = None
 
     def all_cards_visible(self):
-        ''' Returns a boolean indicating if all of the player's cards are visibile or not '''
+        ''' Returns a boolean indicating if all of the player's cards are visible or not '''
         for card in self._hand:
-            if card[1] == False:
+            if card[1] is False:
                 return False
         return True
 
@@ -192,7 +192,7 @@ class GameState(object):
             cls.__instance._current_player += 1
 
     @classmethod
-    def current_player_index(cls):
+    def active_player_index(cls):
         ''' Returns an int representing the index of the currently active player '''
         return cls.__instance._current_player
 
