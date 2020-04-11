@@ -39,9 +39,9 @@ CARD_ART = {
     'placeholder': 'card_placeholder.png'
 }
 
-################################################################################
-# Constants for the player's hand panel (panel that displays the player's cards)
-################################################################################
+###############################################################################
+# Constants for the players hand panel (panel that displays the player's cards)
+###############################################################################
 
 # Panel dimensions
 HAND_PANEL_WIDTH = 310
@@ -65,9 +65,9 @@ PLAYER_LBL_FONT_SIZE = 30
 PLAYER_LBL_POS_X = int(HAND_PANEL_WIDTH / 2)
 PLAYER_LBL_POS_Y = 5
 
-#################################################################################
+###############################################################################
 # Constants for the panel showing the player's currently drawn card
-#################################################################################
+###############################################################################
 
 # Panel dimensions
 DRAW_PANEL_WIDTH = 310
@@ -84,9 +84,9 @@ DRAW_PANEL_PADDING_TOP = 20
 DRAW_PANEL_CARD_POS_X = int((DRAW_PANEL_WIDTH / 2) - (CARD_WIDTH / 3))
 DRAW_PANEL_CARD_POS_Y = DRAW_PANEL_Y + DRAW_PANEL_PADDING_TOP
 
-##################################################################################
+###############################################################################
 # Constants for the panel showing the draw and discard piles
-##################################################################################
+###############################################################################
 
 # Panel dimensions
 DECK_PANEL_HEIGHT = 95
