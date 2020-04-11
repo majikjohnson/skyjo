@@ -17,10 +17,11 @@ def controller():
     view = SkyjoView()
 
     ui_coords = {}
+    score_button_coords = None
 
     running = True
     update_view = True
-    round_summary_view = True
+    round_summary_view = False
     while running:
         # convenience variables
         current_player = game_state.get_current_player()
@@ -98,6 +99,13 @@ def controller():
 
         if current_phase == Phase.round_over:
             round_summary_view = True
+            if mouse_clicked:
+                mouse_clicked = False
+                if score_button_coords.collidepoint(mouse_x, mouse_y):
+                    game_state.end_round()
+                    round_summary_view = False
+                    update_view = True
+                    game_state.current_phase = Phase.round_prep
 
         if game_state.round_over:
             game_state.current_phase = Phase.round_over
@@ -106,8 +114,13 @@ def controller():
             ui_coords = view.update_display(game_state)
             update_view = False
         if round_summary_view:
-            view.show_round_summary(game_state)
+            score_button_coords = view.show_round_summary(game_state)
             round_summary_view = False
+
+
+        print(f'Current Phase: {game_state.current_phase}')
+        print(f'Round Summary View: {round_summary_view}')
+
 
 
 if __name__ == "__main__":

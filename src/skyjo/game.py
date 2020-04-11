@@ -10,16 +10,25 @@ class Deck(object):
     def __new__(cls):
         if cls.__instance is None:
             cls.__instance = object.__new__(cls)
-            cls.__instance._discard_pile = []
-            cls.__instance._draw_pile = []
-            cls.__instance._draw_pile.extend(itertools.repeat(-2, 5))
-            cls.__instance._draw_pile.extend(itertools.repeat(0, 15))
-            cls.__instance._draw_pile.extend(itertools.repeat(-1, 10))
-            for num in range(1, 13):
-                cls.__instance._draw_pile.extend(itertools.repeat(num, 10))
-            card = cls.__instance.draw_card()
-            cls.__instance.discard_card(card)
+            cls._prepare_deck()
         return cls.__instance
+
+    @classmethod
+    def _prepare_deck(cls):
+        cls.__instance._discard_pile = []
+        cls.__instance._draw_pile = []
+        cls.__instance._draw_pile.extend(itertools.repeat(-2, 5))
+        cls.__instance._draw_pile.extend(itertools.repeat(0, 15))
+        cls.__instance._draw_pile.extend(itertools.repeat(-1, 10))
+        for num in range(1, 13):
+            cls.__instance._draw_pile.extend(itertools.repeat(num, 10))
+        card = cls.__instance.draw_card()
+        cls.__instance.discard_card(card)
+
+    @classmethod
+    def reset(cls):
+        ''' Resets the deck to it's initial state '''
+        cls.__instance._prepare_deck()
 
     @classmethod
     def draw_card(cls):
@@ -162,12 +171,16 @@ class GameState(object):
             cls.__instance = object.__new__(cls)
             cls.__instance._players = players
             cls.__instance._deck = deck
-            cls.__instance._current_player = 0
-            cls.__instance.current_phase = Phase.round_prep
-            cls.__instance.round_over = False
-            cls.__instance.game_over = False
-            cls.__instance._remaining_turns = deck.draw_pile_size()
+            cls.__instance._init_state()
         return cls.__instance
+
+    @classmethod
+    def _init_state(cls):
+        cls.__instance._current_player = 0
+        cls.__instance.current_phase = Phase.round_prep
+        cls.__instance.round_over = False
+        cls.__instance._remaining_turns = cls.__instance._deck.draw_pile_size()
+
 
     @classmethod
     def end_turn(cls):
@@ -182,6 +195,15 @@ class GameState(object):
                 cls.__instance._current_player += 1
         else:
             cls.__instance.round_over = True
+
+    @classmethod
+    def end_round(cls):
+        ''' Adds current points to each player's score and clears state '''
+        cls.__instance._deck.reset()
+        for player in cls.__instance._players:
+            player.end_round()
+        cls.__instance._deck.deal_hand(cls.__instance._players)
+        cls.__instance._init_state()
 
     @classmethod
     def get_current_player(cls):
