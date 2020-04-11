@@ -14,8 +14,10 @@ class SkyjoView():
             working_dir = os.path.dirname(__file__)
             cls.__instance._art_dir = os.path.join(working_dir,
                                                    const.CARD_ART_DIR)
-            cls.__instance._screen = pygame.display.set_mode((const.SCREEN_WIDTH,
-                                                              const.SCREEN_HEIGHT))
+            cls.__instance._screen = (
+                pygame.display.set_mode((const.SCREEN_WIDTH,
+                                         const.SCREEN_HEIGHT))
+            )
             pygame.display.set_caption('Skyjo')
             cls.__instance._clock = pygame.time.Clock()
         return cls.__instance
@@ -95,10 +97,14 @@ class SkyjoView():
             if player_no == current_player_no:
                 player_label_colour = const.GREEN
 
-            font = pygame.font.SysFont(const.MAIN_FONT, const.PLAYER_LBL_FONT_SIZE)
-            txt_player_no = font.render(f'Player {player_no + 1}', True, player_label_colour)
+            font = pygame.font.SysFont(const.MAIN_FONT,
+                                       const.PLAYER_LBL_FONT_SIZE)
+            txt_player_no = font.render(f'Player {player_no + 1}',
+                                        True, player_label_colour)
             txt_rect = txt_player_no.get_rect()
-            txt_rect.x = int(const.PLAYER_LBL_POS_X - (txt_player_no.get_width() / 2) + hand_panel_spacer)
+            txt_rect.x = int(const.PLAYER_LBL_POS_X -
+                             (txt_player_no.get_width() / 2) +
+                             hand_panel_spacer)
             txt_rect.y = const.PLAYER_LBL_POS_Y
             screen.blit(txt_player_no, txt_rect)
 
