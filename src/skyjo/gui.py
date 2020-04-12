@@ -23,9 +23,15 @@ class SkyjoView():
         return cls.__instance
 
     @classmethod
-    def show_round_summary(cls, game_state):
+    def show_scores(cls, game_state, type='round'):
         screen = cls.__instance._screen
         players = game_state.get_players()
+
+        title = const.SCORE_PANEL_ROUND_TITLE
+
+        if type == 'total':
+            title = const.SCORE_PANEL_TOTAL_TITLE
+
 
         pygame.draw.rect(
             screen, const.SCORE_PANEL_COLOUR,
@@ -35,7 +41,12 @@ class SkyjoView():
 
         scores = []
         for i, player in enumerate(players):
-            scores.append((f'Player {i + 1}', player.get_round_points()))
+            if type == 'total':
+                score = player.get_score()
+                
+            else:
+                score = player.get_round_points()
+            scores.append((f'Player {i + 1}', score))
         scores.sort(key=lambda tup: tup[1])
 
         # Print title for score panel
@@ -43,8 +54,7 @@ class SkyjoView():
                                    const.SCORE_PANEL_TITLE_FONT_SIZE)
         font.set_bold(True)
         font.set_underline(True)
-        txt_title = font.render(const.SCORE_PANEL_ROUND_TITLE,
-                                True, const.SCORE_PANEL_TEXT_COLOUR)
+        txt_title = font.render(title, True, const.SCORE_PANEL_TEXT_COLOUR)
         txt_rect = txt_title.get_rect()
         txt_rect.x = const.SCORE_PANEL_TITLE_X
         txt_rect.y = const.SCORE_PANEL_TITLE_Y

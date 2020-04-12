@@ -150,6 +150,9 @@ class Player:
                 points += card[0]
         return points
 
+    def get_score(self):
+        return self._score
+
     def end_round(self):
         ''' Updates the player's score and resets their hand  '''
         self._score += self.get_round_points()
@@ -157,14 +160,14 @@ class Player:
         self._active_card = None
 
 
-Phase = Enum('Phase', 'round_prep draw discard round_over game_over')
+Phase = Enum('Phase', 'round_prep draw discard round_over show_scores game_over')
 
 
 class GameState(object):
     ''' Singleton class that keeps track of the state of the game '''
     __instance = None
 
-    round_prep, draw, discard, round_over, game_over = (0, 1, 2, 3, 4)
+    round_prep, draw, discard, round_over, show_scores, game_over = (0, 1, 2, 3, 4, 5)
 
     def __new__(cls, players, deck):
         if cls.__instance is None:
