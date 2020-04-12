@@ -26,6 +26,10 @@ class SkyjoView():
     def show_game_over(cls, game_state):
         screen = cls.__instance._screen
         players = game_state.get_players()
+        button_coords = {
+            'restart': None,
+            'quit': None
+        }
 
         title = const.GAME_OVER_PANEL_TITLE_TEXT
 
@@ -88,7 +92,42 @@ class SkyjoView():
         )
         screen.blit(txt_score, txt_rect)
 
+        # Print restart button
+        pygame.draw.rect(
+            screen, const.GAME_OVER_RESTART_BUTTON_COLOUR,
+            (const.GAME_OVER_RESTART_BUTTON_X, const.GAME_OVER_RESTART_BUTTON_Y,
+             const.GAME_OVER_RESTART_BUTTON_WIDTH, const.GAME_OVER_RESTART_BUTTON_HEIGHT)
+        )
+
+        font = pygame.font.Font(const.RETRO_COMPUTER,
+                                   const.GAME_OVER_RESTART_BUTTON_FONT_SIZE)
+        txt_button = font.render(const.GAME_OVER_RESTART_BUTTON_TEXT,
+                                 True, const.GAME_OVER_RESTART_BUTTON_TEXT_COLOUR)
+        txt_rect = txt_button.get_rect()
+        txt_rect.x = const.GAME_OVER_RESTART_BUTTON_TEXT_X
+        txt_rect.y = const.GAME_OVER_RESTART_BUTTON_TEXT_Y
+        screen.blit(txt_button, txt_rect)
+        button_coords['restart'] = txt_rect
+
+        # Print Quit button
+        pygame.draw.rect(
+            screen, const.GAME_OVER_QUIT_BUTTON_COLOUR,
+            (const.GAME_OVER_QUIT_BUTTON_X, const.GAME_OVER_QUIT_BUTTON_Y,
+             const.GAME_OVER_QUIT_BUTTON_WIDTH, const.GAME_OVER_QUIT_BUTTON_HEIGHT)
+        )
+
+        font = pygame.font.Font(const.RETRO_COMPUTER,
+                                   const.GAME_OVER_QUIT_BUTTON_FONT_SIZE)
+        txt_button = font.render(const.GAME_OVER_QUIT_BUTTON_TEXT,
+                                 True, const.GAME_OVER_QUIT_BUTTON_TEXT_COLOUR)
+        txt_rect = txt_button.get_rect()
+        txt_rect.x = const.GAME_OVER_QUIT_BUTTON_TEXT_X
+        txt_rect.y = const.GAME_OVER_QUIT_BUTTON_TEXT_Y
+        screen.blit(txt_button, txt_rect)
+        button_coords['quit'] = txt_rect
+
         pygame.display.flip()
+        return button_coords
 
 
 

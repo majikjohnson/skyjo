@@ -18,12 +18,13 @@ def controller():
 
     ui_coords = {}
     score_button_coords = None
+    game_over_button_coords = {}
 
     running = True
     update_view = True
     round_summary_view = False
     score_view = False
-    game_over_view = True
+    game_over_view = False
     while running:
         # convenience variables
         current_player = game_state.get_current_player()
@@ -124,7 +125,13 @@ def controller():
             game_over_view = True
             if mouse_clicked:
                 mouse_clicked = False
-
+                restart_button = game_over_button_coords['restart']
+                quit_button = game_over_button_coords['quit']
+                if quit_button.collidepoint(mouse_x, mouse_y):
+                    running = False
+                elif restart_button.collidepoint(mouse_x, mouse_y):
+                    print('Game restarted')
+            
         if game_state.round_over:
             game_state.current_phase = Phase.round_over
 
@@ -138,7 +145,8 @@ def controller():
             score_button_coords = view.show_scores(game_state, type='total')
             score_view = False
         if game_over_view:
-            game_over_button_coors = view.show_game_over(game_state)
+            game_over_button_coords = view.show_game_over(game_state)
+            game_over_view = False
 
 
 if __name__ == "__main__":
