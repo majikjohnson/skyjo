@@ -73,6 +73,7 @@ class Player:
         self._hand = []
         self._active_card = None
         self._score = 0
+        self.name = ''
 
     def set_hand(self, cards):
         ''' Takes a list of cards and adds them to hand '''
@@ -160,20 +161,21 @@ class Player:
         self._active_card = None
 
 
-Phase = Enum('Phase', 'round_prep draw discard round_over show_scores game_over')
+Phase = Enum('Phase', 'player_select player_name round_prep draw discard round_over show_scores game_over')
 
 
 class GameState(object):
     ''' Singleton class that keeps track of the state of the game '''
     __instance = None
 
-    round_prep, draw, discard, round_over, show_scores, game_over = (0, 1, 2, 3, 4, 5)
+    #pregame, round_prep, draw, discard, round_over, show_scores, game_over = (0, 1, 2, 3, 4, 5, 6)
 
-    def __new__(cls, player_count):
+    def __new__(cls):
         if cls.__instance is None:
             cls.__instance = object.__new__(cls)
-            cls.__instance._player_count = player_count
-            cls.__instance.init_game()
+            cls.__instance.current_phase = Phase.player_select
+            cls.__instance.round_over = False
+            cls.__instance._final_rotation = False
         return cls.__instance
 
     @classmethod
@@ -185,8 +187,8 @@ class GameState(object):
         cls.__instance._remaining_turns = cls.__instance._deck.draw_pile_size()
 
     @classmethod
-    def init_game(cls):
-        player_count = cls.__instance._player_count
+    def init_game(cls, player_count):
+        cls.__instance.player_count = player_count
         deck = Deck()
         deck.reset()
         players = [Player() for _ in range(player_count)]

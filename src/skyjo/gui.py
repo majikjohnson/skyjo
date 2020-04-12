@@ -22,6 +22,88 @@ class SkyjoView():
             cls.__instance._clock = pygame.time.Clock()
         return cls.__instance
 
+    @classmethod
+    def _show_game_title(cls):
+        screen = cls.__instance._screen
+
+        font = pygame.font.Font(const.RETRO_COMPUTER,
+                                const.GAME_TITLE_FONT_SIZE)
+        txt_button = font.render(const.GAME_TITLE_TEXT,
+                                 True, const.GAME_TITLE_COLOUR)
+        txt_rect = txt_button.get_rect()
+        txt_rect.x = int(const.GAME_TITLE_TEXT_X - (txt_rect.width / 2))
+        txt_rect.y = const.GAME_TITLE_TEXT_Y
+        screen.blit(txt_button, txt_rect)
+
+    @classmethod
+    def _print_button(cls, position, text):
+        screen = cls.__instance._screen
+        pygame.draw.rect(
+            screen, const.PLAYER_SELECT_BUTTON_COLOUR,
+            (const.PLAYER_SELECT_BUTTON_X + (position * const.PLAYER_SELECT_BUTTON_ITEM_PADDING),
+             const.PLAYER_SELECT_BUTTON_Y,
+             const.PLAYER_SELECT_BUTTON_WIDTH, const.PLAYER_SELECT_BUTTON_HEIGHT)
+        )
+
+        font = pygame.font.Font(const.RETRO_COMPUTER,
+                                   const.PLAYER_SELECT_BUTTON_FONT_SIZE)
+        txt_button = font.render(text,
+                                 True, const.PLAYER_SELECT_BUTTON_TEXT_COLOUR)
+        txt_rect = txt_button.get_rect()
+        txt_rect.x = const.PLAYER_SELECT_BUTTON_TEXT_X + (position * const.PLAYER_SELECT_BUTTON_ITEM_PADDING)
+        txt_rect.y = const.PLAYER_SELECT_BUTTON_TEXT_Y
+        screen.blit(txt_button, txt_rect)
+        return txt_rect
+
+    @classmethod
+    def show_player_select_view(cls, game_state):
+        screen = cls.__instance._screen
+
+        screen.fill(const.SADDLE_BROWN)
+
+        cls.__instance._show_game_title()
+
+        title = const.PLAYER_SELECT_PANEL_TITLE_TEXT
+
+        pygame.draw.rect(
+            screen, const.PLAYER_SELECT_PANEL_COLOUR,
+            (const.PLAYER_SELECT_PANEL_X, const.PLAYER_SELECT_PANEL_Y,
+             const.PLAYER_SELECT_PANEL_WIDTH, const.PLAYER_SELECT_PANEL_HEIGHT)
+        )
+
+        # Print title for score panel
+        font = pygame.font.Font(const.RETRO_COMPUTER,
+                                   const.PLAYER_SELECT_PANEL_TITLE_FONT_SIZE)
+        font.set_bold(True)
+        font.set_underline(True)
+        txt_title = font.render(title, True, const.PLAYER_SELECT_PANEL_TITLE_COLOUR)
+        txt_rect = txt_title.get_rect()
+        txt_rect.x = const.PLAYER_SELECT_PANEL_TITLE_X
+        txt_rect.y = const.PLAYER_SELECT_PANEL_TITLE_Y
+        screen.blit(txt_title, txt_rect)
+
+        button_text = [
+            const.PLAYER_SELECT_2_BUTTON_TEXT,
+            const.PLAYER_SELECT_3_BUTTON_TEXT,
+            const.PLAYER_SELECT_4_BUTTON_TEXT
+        ]
+
+        button_rects = []
+
+        for i in range(3):
+            button_rects.append(cls.__instance._print_button(i, button_text[i]))
+
+        pygame.display.flip()
+
+        button_coords = {
+            '2': button_rects[0],
+            '3': button_rects[1],
+            '4': button_rects[2]
+        }
+
+        return button_coords
+
+
 
     @classmethod
     def _print_player_score(cls, position, score, format):
@@ -127,11 +209,6 @@ class SkyjoView():
 
         pygame.display.flip()
         return button_coords
-
-
-
-
-
 
     @classmethod
     def show_scores(cls, game_state, type='round'):

@@ -3,25 +3,29 @@ from skyjo.game import Deck, Player, GameState, Phase
 from skyjo.gui import SkyjoView
 
 def controller():
-    number_of_players = 2
-    game_state = GameState(number_of_players)
+    game_state = GameState()
     view = SkyjoView()
 
     ui_coords = {}
     score_button_coords = None
     game_over_button_coords = {}
+    player_select_coords = {}
 
     running = True
-    update_view = True
+    player_select_view = True
+    update_view = False
     round_summary_view = False
     score_view = False
     game_over_view = False
     while running:
         # convenience variables
-        current_player = game_state.get_current_player()
-        active_player_index = game_state.active_player_index()
         current_phase = game_state.current_phase
-        deck = game_state.get_deck()
+
+        if current_phase != Phase.player_select:
+            current_player = game_state.get_current_player()
+            active_player_index = game_state.active_player_index()
+            deck = game_state.get_deck()
+
 
         # Handle input events
         mouse_clicked = False
@@ -31,9 +35,23 @@ def controller():
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 mouse_clicked = True
-                update_view = True
+            
 
+        if current_phase == Phase.player_select:
+            if mouse_clicked:
+                mouse_clicked = False
+                no_of_players = 0
+                if player_select_coords['2'].collidepoint(mouse_x, mouse_y):
+                    no_of_players = 2
+                elif player_select_coords['3'].collidepoint(mouse_x, mouse_y):
+                    no_of_players = 3
+                elif player_select_coords['4'].collidepoint(mouse_x, mouse_y):
+                    no_of_players = 4
+                if no_of_players > 0:
+                    game_state.init_game(no_of_players)
+                
         if current_phase == Phase.round_prep:
+            update_view = True
             if mouse_clicked:
                 mouse_clicked = False
                 hand_card_rects = ui_coords['hand'][active_player_index]
@@ -121,12 +139,15 @@ def controller():
                 if quit_button.collidepoint(mouse_x, mouse_y):
                     running = False
                 elif restart_button.collidepoint(mouse_x, mouse_y):
-                    game_state.init_game()
+                    game_state.init_game(game_state.player_count)
                     game_over_view = False
             
         if game_state.round_over:
             game_state.current_phase = Phase.round_over
 
+        if player_select_view:
+            player_select_coords = view.show_player_select_view(game_state)
+            player_select_view = False
         if update_view:
             ui_coords = view.update_display(game_state)
             update_view = False
