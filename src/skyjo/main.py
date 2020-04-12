@@ -2,18 +2,9 @@ import pygame
 from skyjo.game import Deck, Player, GameState, Phase
 from skyjo.gui import SkyjoView
 
-
-def init_game(number_of_players):
-    ''' Returns a GameState object configured with initial settings '''
-    deck = Deck()
-    players = [Player() for _ in range(number_of_players)]
-    deck.deal_hand(players)
-    return GameState(players, deck)
-
-
 def controller():
-    number_of_players = 4
-    game_state = init_game(number_of_players)
+    number_of_players = 2
+    game_state = GameState(number_of_players)
     view = SkyjoView()
 
     ui_coords = {}
@@ -130,7 +121,8 @@ def controller():
                 if quit_button.collidepoint(mouse_x, mouse_y):
                     running = False
                 elif restart_button.collidepoint(mouse_x, mouse_y):
-                    print('Game restarted')
+                    game_state.init_game()
+                    game_over_view = False
             
         if game_state.round_over:
             game_state.current_phase = Phase.round_over

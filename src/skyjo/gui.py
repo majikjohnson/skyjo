@@ -22,6 +22,31 @@ class SkyjoView():
             cls.__instance._clock = pygame.time.Clock()
         return cls.__instance
 
+
+    @classmethod
+    def _print_player_score(cls, position, score, format):
+        screen = cls.__instance._screen
+        font = pygame.font.Font(const.RETRO_COMPUTER, format[0])
+
+        score_str = ''
+        if position == 0:
+            score_str = f'1st  -- {score[0]} : {score[1]}'
+        elif position == 1:
+            score_str = f'2nd -- {score[0]}: {score[1]}'
+        elif position == 2:
+            score_str = f'3rd -- {score[0]}: {score[1]}'
+        elif position == 3:
+            score_str = f'4th -- {score[0]}: {score[1]}'
+
+        txt_score = font.render(score_str, True, format[1])
+        txt_rect = txt_score.get_rect()
+        txt_rect.x = const.GAME_OVER_PANEL_TEXT_X
+        txt_rect.y = (
+            const.GAME_OVER_PANEL_TEXT_Y +
+            (position * const.GAME_OVER_PANEL_ITEM_PADDING_TOP)
+        )
+        screen.blit(txt_score, txt_rect)
+
     @classmethod
     def show_game_over(cls, game_state):
         screen = cls.__instance._screen
@@ -55,43 +80,17 @@ class SkyjoView():
         for i, player in enumerate(players):
             scores.append((f'Player {i + 1}', player.get_score()))
         scores.sort(key=lambda tup: tup[1])
+        
+        score_format = [
+            (const.GAME_OVER_1ST_FONT_SIZE, const.GAME_OVER_1ST_COLOUR),
+            (const.GAME_OVER_2ND_FONT_SIZE, const.GAME_OVER_2ND_COLOUR),
+            (const.GAME_OVER_3RD_FONT_SIZE, const.GAME_OVER_3RD_COLOUR),
+            (const.GAME_OVER_NTH_FONT_SIZE, const.GAME_OVER_NTH_COLOUR),
+        ]
 
-        font = pygame.font.Font(const.RETRO_COMPUTER,
-                                       const.GAME_OVER_1ST_FONT_SIZE)
-        txt_score = font.render(f'1st  -- {scores[0][0]}: {scores[0][1]}',
-                                True, const.GAME_OVER_1ST_COLOUR)
-        txt_rect = txt_score.get_rect()
-        txt_rect.x = const.GAME_OVER_PANEL_TEXT_X
-        txt_rect.y = (
-            const.GAME_OVER_PANEL_TEXT_Y +
-            (0 * const.GAME_OVER_PANEL_ITEM_PADDING_TOP)
-        )
-        screen.blit(txt_score, txt_rect)
-
-        font = pygame.font.Font(const.RETRO_COMPUTER,
-                                const.GAME_OVER_2ND_FONT_SIZE)
-        txt_score = font.render(f'2nd -- {scores[1][0]}: {scores[1][1]}',
-                                True, const.GAME_OVER_2ND_COLOUR)
-        txt_rect = txt_score.get_rect()
-        txt_rect.x = const.GAME_OVER_PANEL_TEXT_X
-        txt_rect.y = (
-            const.GAME_OVER_PANEL_TEXT_Y +
-            (1 * const.GAME_OVER_PANEL_ITEM_PADDING_TOP)
-        )
-        screen.blit(txt_score, txt_rect)
-
-        font = pygame.font.Font(const.RETRO_COMPUTER,
-                                const.GAME_OVER_3RD_FONT_SIZE)
-        txt_score = font.render(f'3rd -- {scores[2][0]}: {scores[2][1]}',
-                                True, const.GAME_OVER_3RD_COLOUR)
-        txt_rect = txt_score.get_rect()
-        txt_rect.x = const.GAME_OVER_PANEL_TEXT_X
-        txt_rect.y = (
-            const.GAME_OVER_PANEL_TEXT_Y +
-            (2 * const.GAME_OVER_PANEL_ITEM_PADDING_TOP)
-        )
-        screen.blit(txt_score, txt_rect)
-
+        for i, score in enumerate(scores):
+            cls.__instance._print_player_score(i, score, score_format[i])
+        
         # Print restart button
         pygame.draw.rect(
             screen, const.GAME_OVER_RESTART_BUTTON_COLOUR,

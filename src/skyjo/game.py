@@ -169,12 +169,11 @@ class GameState(object):
 
     round_prep, draw, discard, round_over, show_scores, game_over = (0, 1, 2, 3, 4, 5)
 
-    def __new__(cls, players, deck):
+    def __new__(cls, player_count):
         if cls.__instance is None:
             cls.__instance = object.__new__(cls)
-            cls.__instance._players = players
-            cls.__instance._deck = deck
-            cls.__instance._init_state()
+            cls.__instance._player_count = player_count
+            cls.__instance.init_game()
         return cls.__instance
 
     @classmethod
@@ -185,6 +184,16 @@ class GameState(object):
         cls.__instance._final_rotation = False
         cls.__instance._remaining_turns = cls.__instance._deck.draw_pile_size()
 
+    @classmethod
+    def init_game(cls):
+        player_count = cls.__instance._player_count
+        deck = Deck()
+        deck.reset()
+        players = [Player() for _ in range(player_count)]
+        deck.deal_hand(players)
+        cls.__instance._players = players
+        cls.__instance._deck = deck
+        cls.__instance._init_state()
 
     @classmethod
     def end_turn(cls):
