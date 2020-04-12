@@ -22,7 +22,8 @@ def controller():
     running = True
     update_view = True
     round_summary_view = False
-    score_view = True
+    score_view = False
+    game_over_view = True
     while running:
         # convenience variables
         current_player = game_state.get_current_player()
@@ -113,8 +114,16 @@ def controller():
                 mouse_clicked = False
                 if score_button_coords.collidepoint(mouse_x, mouse_y):
                     score_view = False
-                    update_view = True
-                    game_state.current_phase = Phase.round_prep
+                    if not game_state.is_game_over():
+                        update_view = True
+                        game_state.current_phase = Phase.round_prep
+                    else:
+                        game_state.current_phase = Phase.game_over
+
+        if current_phase == Phase.game_over:
+            game_over_view = True
+            if mouse_clicked:
+                mouse_clicked = False
 
         if game_state.round_over:
             game_state.current_phase = Phase.round_over
@@ -128,6 +137,8 @@ def controller():
         if score_view:
             score_button_coords = view.show_scores(game_state, type='total')
             score_view = False
+        if game_over_view:
+            game_over_button_coors = view.show_game_over(game_state)
 
 
 if __name__ == "__main__":

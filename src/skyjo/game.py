@@ -253,3 +253,11 @@ class GameState(object):
                 highest_points = player.get_round_points()
                 player_index = i
         return player_index
+
+    @classmethod
+    def is_game_over(cls):
+        game_over = False
+        for player in cls.__instance._players:
+            if player.get_score() >= 100:
+                game_over = True
+        return game_over

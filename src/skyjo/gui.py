@@ -23,6 +23,79 @@ class SkyjoView():
         return cls.__instance
 
     @classmethod
+    def show_game_over(cls, game_state):
+        screen = cls.__instance._screen
+        players = game_state.get_players()
+
+        title = const.GAME_OVER_PANEL_TITLE_TEXT
+
+        pygame.draw.rect(
+            screen, const.GAME_OVER_PANEL_COLOUR,
+            (const.GAME_OVER_PANEL_X, const.GAME_OVER_PANEL_Y,
+             const.GAME_OVER_PANEL_WIDTH, const.GAME_OVER_PANEL_HEIGHT)
+        )
+
+        # Print title for score panel
+        font = pygame.font.Font(const.RETRO_COMPUTER,
+                                   const.GAME_OVER_PANEL_TITLE_FONT_SIZE)
+        font.set_bold(True)
+        font.set_underline(True)
+        txt_title = font.render(title, True, const.GAME_OVER_PANEL_TITLE_COLOUR)
+        txt_rect = txt_title.get_rect()
+        txt_rect.x = const.GAME_OVER_PANEL_TITLE_X
+        txt_rect.y = const.GAME_OVER_PANEL_TITLE_Y
+        screen.blit(txt_title, txt_rect)
+
+        # Print scores for each player
+        scores = []
+        for i, player in enumerate(players):
+            scores.append((f'Player {i + 1}', player.get_score()))
+        scores.sort(key=lambda tup: tup[1])
+
+        font = pygame.font.Font(const.RETRO_COMPUTER,
+                                       const.GAME_OVER_1ST_FONT_SIZE)
+        txt_score = font.render(f'1st  -- {scores[0][0]}: {scores[0][1]}',
+                                True, const.GAME_OVER_1ST_COLOUR)
+        txt_rect = txt_score.get_rect()
+        txt_rect.x = const.GAME_OVER_PANEL_TEXT_X
+        txt_rect.y = (
+            const.GAME_OVER_PANEL_TEXT_Y +
+            (0 * const.GAME_OVER_PANEL_ITEM_PADDING_TOP)
+        )
+        screen.blit(txt_score, txt_rect)
+
+        font = pygame.font.Font(const.RETRO_COMPUTER,
+                                const.GAME_OVER_2ND_FONT_SIZE)
+        txt_score = font.render(f'2nd -- {scores[1][0]}: {scores[1][1]}',
+                                True, const.GAME_OVER_2ND_COLOUR)
+        txt_rect = txt_score.get_rect()
+        txt_rect.x = const.GAME_OVER_PANEL_TEXT_X
+        txt_rect.y = (
+            const.GAME_OVER_PANEL_TEXT_Y +
+            (1 * const.GAME_OVER_PANEL_ITEM_PADDING_TOP)
+        )
+        screen.blit(txt_score, txt_rect)
+
+        font = pygame.font.Font(const.RETRO_COMPUTER,
+                                const.GAME_OVER_3RD_FONT_SIZE)
+        txt_score = font.render(f'3rd -- {scores[2][0]}: {scores[2][1]}',
+                                True, const.GAME_OVER_3RD_COLOUR)
+        txt_rect = txt_score.get_rect()
+        txt_rect.x = const.GAME_OVER_PANEL_TEXT_X
+        txt_rect.y = (
+            const.GAME_OVER_PANEL_TEXT_Y +
+            (2 * const.GAME_OVER_PANEL_ITEM_PADDING_TOP)
+        )
+        screen.blit(txt_score, txt_rect)
+
+        pygame.display.flip()
+
+
+
+
+
+
+    @classmethod
     def show_scores(cls, game_state, type='round'):
         screen = cls.__instance._screen
         players = game_state.get_players()
