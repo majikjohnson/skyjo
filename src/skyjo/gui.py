@@ -39,7 +39,7 @@ class SkyjoView():
         scores.sort(key=lambda tup: tup[1])
 
         # Print title for score panel
-        font = pygame.font.SysFont(const.MAIN_FONT,
+        font = pygame.font.Font(const.RETRO_COMPUTER,
                                    const.SCORE_PANEL_TITLE_FONT_SIZE)
         font.set_bold(True)
         font.set_underline(True)
@@ -52,7 +52,7 @@ class SkyjoView():
 
         # Print scores for each player
         for i, score in enumerate(scores):
-            font = pygame.font.SysFont(const.MAIN_FONT,
+            font = pygame.font.Font(const.RETRO_COMPUTER,
                                        const.SCORE_PANEL_TEXT_FONT_SIZE)
             txt_score = font.render(f'{i + 1}. {score[0]}: {score[1]}',
                                     True, const.SCORE_PANEL_TEXT_COLOUR)
@@ -71,7 +71,7 @@ class SkyjoView():
              const.SCORE_PANEL_BUTTON_WIDTH, const.SCORE_PANEL_BUTTON_HEIGHT)
         )
 
-        font = pygame.font.SysFont(const.MAIN_FONT,
+        font = pygame.font.Font(const.RETRO_COMPUTER,
                                    const.SCORE_PANEL_BUTTON_FONT_SIZE)
         txt_button = font.render(const.SCORE_PANEL_BUTTON_TEXT,
                                  True, const.SCORE_PANEL_BUTTON_TEXT_COLOUR)
@@ -145,7 +145,7 @@ class SkyjoView():
         if player_no == active_player_no:
             player_label_colour = const.PLAYER_LBL_COLOUR_ACTIVE
 
-        font = pygame.font.SysFont(const.MAIN_FONT,
+        font = pygame.font.Font(const.RETRO_COMPUTER,
                                    const.PLAYER_LBL_FONT_SIZE)
         txt_player_no = font.render(f'Player {player_no + 1}',
                                     True, player_label_colour)
@@ -211,7 +211,7 @@ class SkyjoView():
         # Draw player score in active card panel
         points = player.get_round_points()
         points_label_colour = const.POINTS_LBL_COLOUR
-        font = pygame.font.SysFont(const.MAIN_FONT,
+        font = pygame.font.Font(const.RETRO_COMPUTER,
                                    const.POINTS_LBL_FONT_SIZE)
         txt_points = font.render(f'Round points: {points}',
                                  True, points_label_colour)
